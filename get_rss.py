@@ -8,15 +8,16 @@ import gzip
 import zlib
 import re
 import feedparser
-
+from io import StringIO
 Sources = [{"URL": "https://kat.cr/?rss=1", "gzip": True}]
 for URL in Sources:
-        command = "curl {}".format(URL["URL"])
+        full_page = urllib.request.urlopen(URL["URL"]).read()
         print("Page read")
-        full_page = subprocess.check_output(command.split())
         if URL["gzip"]:
-                command = "gunzip"
-                full_page = subprocess.check_output(command.split(), input=full_page)
+                # command = "gunzip"
+                # full_page = subprocess.check_output(command.split(), input=full_page)
+                # page_file = StringIO(str(full_page))
+                full_page = zlib.decompress(full_page, 15+32)
         data = full_page.decode("utf-8")
         feed = re.findall(r"<item>.*?</item>", data, re.DOTALL)
         for entry in feed:
