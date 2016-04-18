@@ -22,10 +22,28 @@ for URL in Sources:
         feed = re.findall(r"<item>.*?</item>", data, re.DOTALL)
         for entry in feed:
                 title = re.findall(r"<title>(.*)</title>", entry, re.DOTALL)[0]
-                tlink = re.findall(r"<enclosure url=\"(.*\.torrent).*/>", entry, re.DOTALL)
+                mlink = re.findall(r"<torrent:magnetURI><!\[CDATA\[(.*)\]\].*</torrent:magnetURI>", entry, re.DOTALL)[0]
                 if not re.search(URL["regex-yes"], title, re.DOTALL):
                         continue
                 if URL["regex-not"] and re.search(URL["regex-not"], title, re.DOTALL):
                         continue
-                print(title, tlink)
-                print("----------------------------------")
+                try:
+                        with open("download_log.dat", "r") as f:
+                                if mlink in f.read():
+                                        print("Skipping {} (already downloaded)".format(title))
+                                        continue
+                except:
+                        pass
+                print("Downloading {}".format(title))
+                # Generate torrent from magnet on the fly, it seems more
+                # reliable then trying to download the .torrent, might be useful
+                # to import a library to generate more complete torrent files
+                with open("meta-{}.torrent".format("_".join(title.split(" "))),"w") as f:
+                          f.write("d10:magnet-uri{}:{}e\n".format(len(mlink), mlink))
+
+                          with open("download_log.dat", "a+") as f:
+                        f.write(mlink)
+                        f.write("\n")
+                # I know file handling here is sketchy at best, will probably
+                # change it for sqlite soon
+
