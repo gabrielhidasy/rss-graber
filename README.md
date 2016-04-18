@@ -11,3 +11,12 @@ It enables downloading multiple feeds, filtering torrents by regexes.
 Yes, thats many, regexes are powerful
 
 It works only on feeds that provide magnet links
+
+
+# TODO
+
+* Make sources an external resorce (JSON? YAML? XML?)
+* Use docopt to make an usable program (with functions to add, edit 
+  and remove sources)
+* Migrate downloaded-list to a real DB or at least keep the list in memory
+* Add option to save torrents in a specific folder per feed
