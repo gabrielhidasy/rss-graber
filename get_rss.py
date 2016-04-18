@@ -1,27 +1,31 @@
 #!/usr/bin/python
-import sys
-import subprocess
 import re
 import urllib.request
-import xmltodict
-import gzip
 import zlib
-import re
-import feedparser
-from io import StringIO
-Sources = [{"URL": "https://kat.cr/?rss=1", "gzip": True}]
+
+Sources = [
+        {
+                "URL": "https://fakeurl.to/?rss=1",
+                "gzip": True,
+                "regex-yes": r"(Serie I like)",
+                "regex-not": r"(Codec I hate)"
+        }
+]
+
 for URL in Sources:
         full_page = urllib.request.urlopen(URL["URL"]).read()
         print("Page read")
         if URL["gzip"]:
-                # command = "gunzip"
-                # full_page = subprocess.check_output(command.split(), input=full_page)
-                # page_file = StringIO(str(full_page))
+                # Magic +47 bytes required here
                 full_page = zlib.decompress(full_page, 15+32)
         data = full_page.decode("utf-8")
         feed = re.findall(r"<item>.*?</item>", data, re.DOTALL)
         for entry in feed:
-                title = re.findall(r"<title>(.*)</title>", entry, re.DOTALL)
+                title = re.findall(r"<title>(.*)</title>", entry, re.DOTALL)[0]
                 tlink = re.findall(r"<enclosure url=\"(.*\.torrent).*/>", entry, re.DOTALL)
+                if not re.search(URL["regex-yes"], title, re.DOTALL):
+                        continue
+                if URL["regex-not"] and re.search(URL["regex-not"], title, re.DOTALL):
+                        continue
                 print(title, tlink)
                 print("----------------------------------")

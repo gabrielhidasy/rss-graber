@@ -11,6 +11,7 @@ an start.
 
 It will have in future the possibility to filter feeds in many ways, namely:
 
-* Required: A feed must match all required regexes.
-* Sufficient: A feed must match one of the sufficient regexes
-* Forbidden: A feed cannot have any forbidden regexes
+* Required: A feed must match the required regex.
+* Forbidden: A feed cannot match the forbidden regex
+
+Yes, thats many, regexes are powerfull
