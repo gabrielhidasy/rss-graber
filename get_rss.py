@@ -8,7 +8,8 @@ Sources = [
                 "URL": "https://fakeurl.to/?rss=1",
                 "gzip": True,
                 "regex-yes": r"(Serie I like)",
-                "regex-not": r"(Codec I hate)"
+                "regex-not": r"(Codec I hate)",
+                "store-torrents": "./"
         }
 ]
 
@@ -38,10 +39,10 @@ for URL in Sources:
                 # Generate torrent from magnet on the fly, it seems more
                 # reliable then trying to download the .torrent, might be useful
                 # to import a library to generate more complete torrent files
-                with open("meta-{}.torrent".format("_".join(title.split(" "))),"w") as f:
+                with open("{}/meta-{}.torrent".format(URL["store-torrents"], "_".join(title.split(" "))),"w") as f:
                           f.write("d10:magnet-uri{}:{}e\n".format(len(mlink), mlink))
 
-                          with open("download_log.dat", "a+") as f:
+                with open("download_log.dat", "a+") as f:
                         f.write(mlink)
                         f.write("\n")
                 # I know file handling here is sketchy at best, will probably
