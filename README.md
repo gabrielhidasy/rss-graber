@@ -14,11 +14,11 @@ Can save each feed to an specific folder.
 
 It works only on feeds that provide magnet links
 
+Configuration is made in YAML
 
 # TODO
 
-* Make sources an external resorce (JSON? YAML? XML?)
-* Use docopt to make an usable program (with functions to add, edit
+* Use docopt to make an usable program (with functions to add, edit 
   and remove sources)
 * Migrate downloaded-list to a real DB or at least keep the list in memory
 * Fetch feeds in parallel (will need to work on logging first, or else race conditions)

@@ -1,0 +1,7 @@
+Sources:
+        - name: fake
+          URL: https://fake.org/?rss=1
+          gzip: True,
+          regex-yes: r"",
+          regex-not: r"",
+          store-torrents: ./

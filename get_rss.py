@@ -1,21 +1,15 @@
 #!/usr/bin/python
 import re
 import urllib.request
+import yaml
 import zlib
 
-Sources = [
-        {
-                "URL": "https://fakeurl.to/?rss=1",
-                "gzip": True,
-                "regex-yes": r"(Serie I like)",
-                "regex-not": r"(Codec I hate)",
-                "store-torrents": "./"
-        }
-]
+config = yaml.load(open("config.yaml").read())
+Sources = config["Sources"]
+log_path = config.get("log_path", "./")
 
 for URL in Sources:
         full_page = urllib.request.urlopen(URL["URL"]).read()
-        print("Page read")
         if URL["gzip"]:
                 # Magic +47 bytes required here
                 full_page = zlib.decompress(full_page, 15+32)
@@ -29,7 +23,7 @@ for URL in Sources:
                 if URL["regex-not"] and re.search(URL["regex-not"], title, re.DOTALL):
                         continue
                 try:
-                        with open("download_log.dat", "r") as f:
+                        with open("{}download_log.dat".format(log_path), "r") as f:
                                 if mlink in f.read():
                                         print("Skipping {} (already downloaded)".format(title))
                                         continue
